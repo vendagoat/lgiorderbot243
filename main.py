@@ -16,8 +16,8 @@ keep_alive()
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 STATUS = discord.Status.online
-ACTIVITY = "Playing with orders"
-ACTIVITY_TYPE = discord.ActivityType.playing
+ACTIVITY = "Watching The Orders"
+ACTIVITY_TYPE = discord.ActivityType.watching
 LTC_ADDRESS = "LfWgXamAwJkWeHFowxXu5ZY5YRD5xPXMUA"
 BTC_ADDRESS = "No Bitcoin address has been set."
 PAYPAL = "No PayPal has been set."
@@ -216,6 +216,7 @@ async def stock_command(ctx):
     await ctx.send(embed=embed)
 
 @bot.command(name='get', help='Get accounts from stock')
+@commands.has_guild_permissions(administrator=True)
 async def get_command(ctx, service: str, *account_indices: str):
     accounts_folder = 'accounts'
     service = service.lower()
