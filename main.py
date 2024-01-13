@@ -190,7 +190,6 @@ async def complete_order(ctx, order_id: str):
 
 @bot.command(name='stock', help='Display the number of accounts')
 async def stock_command(ctx):
-    accounts_folder = 'accounts'
 
     try:
         files = os.listdir(accounts_folder)
@@ -218,7 +217,6 @@ async def stock_command(ctx):
 @bot.command(name='get', help='Get accounts from stock')
 @commands.has_guild_permissions(administrator=True)
 async def get_command(ctx, service: str, *account_indices: str):
-    accounts_folder = 'accounts'
     service = service.lower()
 
     try:
