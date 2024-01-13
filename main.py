@@ -37,6 +37,7 @@ def get_preorder_channel(guild):
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.messages = True
 
 bot = commands.Bot(command_prefix=',', intents=intents)
 
