@@ -197,7 +197,9 @@ async def stock_command(ctx):
     accounts_file_path = os.path.join(ACCOUNTS_DIR, f'{service.lower()}.txt')
 
     try:
-        files = os.listdir(accounts_folder)
+        files = os.listdir(ACCOUNTS_DIR)
+        file_path = os.path.join(ACCOUNTS_DIR, file_name)
+
     except FileNotFoundError:
         await ctx.send("Error: 'accounts' folder not found.")
         return
