@@ -194,11 +194,8 @@ async def complete_order(ctx, order_id: str):
 
 @bot.command(name='stock', help='Display the number of accounts')
 async def stock_command(ctx):
-    accounts_file_path = os.path.join(ACCOUNTS_DIR, f'{service.lower()}.txt')
-
     try:
         files = os.listdir(ACCOUNTS_DIR)
-        file_path = os.path.join(ACCOUNTS_DIR, file_name)
 
     except FileNotFoundError:
         await ctx.send("Error: 'accounts' folder not found.")
@@ -211,7 +208,7 @@ async def stock_command(ctx):
     embed = discord.Embed(title='Stock Information', color=discord.Color.blue())
 
     for file_name in files:
-        file_path = os.path.join(accounts_folder, file_name)
+        file_path = os.path.join(ACCOUNTS_DIR, file_name)
         if os.path.isfile(file_path):
             service_name = os.path.splitext(file_name)[0].capitalize()
             with open(file_path, 'r') as file:
