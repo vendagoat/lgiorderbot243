@@ -13,6 +13,9 @@ import logging
 from keep_alive import keep_alive
 keep_alive()
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ACCOUNTS_DIR = os.path.join(BASE_DIR, 'accounts')
+
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 STATUS = discord.Status.idle
@@ -190,6 +193,7 @@ async def complete_order(ctx, order_id: str):
 
 @bot.command(name='stock', help='Display the number of accounts')
 async def stock_command(ctx):
+    accounts_file_path = os.path.join(ACCOUNTS_DIR, f'{service.lower()}.txt')
 
     try:
         files = os.listdir(accounts_folder)
@@ -214,48 +218,39 @@ async def stock_command(ctx):
 
     await ctx.send(embed=embed)
 
-@bot.command(name='get', help='Get accounts from stock')
-@commands.has_guild_permissions(administrator=True)
-async def get_command(ctx, service: str, *account_indices: str):
-    service = service.lower()
+@bot.command(name='get', help='Get account(s) from stock')
+async def get_command(ctx, service: str, *, indices: str):
+    indices = [int(index.strip()) - 1 for index in indices.split(',')]
+    accounts_file_path = os.path.join(ACCOUNTS_DIR, f'{service.lower()}.txt')
 
     try:
-        files = os.listdir(accounts_folder)
+        with open(accounts_file_path, 'r') as file:
+            accounts = file.readlines()
     except FileNotFoundError:
-        await ctx.send("Error: 'accounts' folder not found.")
+        await ctx.send(f"Error: '{service.lower()}.txt' not found.")
         return
 
-    found_file = None
-    for file_name in files:
-        if service in file_name.lower():
-            found_file = file_name
-            break
-
-    if not found_file:
-        await ctx.send(f"No accounts found for service: {service}.")
+    if not accounts:
+        await ctx.send(f"No accounts found for {service}.")
         return
 
-    file_path = os.path.join(accounts_folder, found_file)
-    with open(file_path, 'r') as file:
-        accounts = file.readlines()
+    selected_accounts = [accounts[i] for i in indices if 0 <= i < len(accounts)]
 
-    try:
-        account_indices = list(map(int, account_indices))
-        selected_accounts = [accounts[i - 1] for i in account_indices]
-    except (ValueError, IndexError):
-        await ctx.send("Invalid account indices.")
+    if not selected_accounts:
+        await ctx.send("Invalid indices provided.")
         return
 
-    user = ctx.author
-    for selected_account in selected_accounts:
-        await user.send(selected_account.strip())
+    # Send selected accounts via DM
+    dm_channel = await ctx.author.create_dm()
+    message = "\n".join(selected_accounts)
+    await dm_channel.send(f"Here are your {service} account(s):\n{message}")
 
     # Remove selected accounts from the file
-    remaining_accounts = [account for i, account in enumerate(accounts) if i + 1 not in account_indices]
-    with open(file_path, 'w') as file:
+    remaining_accounts = [account for i, account in enumerate(accounts) if i not in indices]
+    with open(accounts_file_path, 'w') as file:
         file.writelines(remaining_accounts)
 
-    await ctx.send(f"Accounts sent to {user.mention}. Selected accounts removed from stock.")
+    await ctx.send(f"Sent {len(selected_accounts)} {service} account(s) to your DM and removed them from stock.")
 
 logging.basicConfig(level=logging.INFO)
 print(BOT_TOKEN)
