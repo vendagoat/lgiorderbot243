@@ -15,8 +15,8 @@ keep_alive()
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
-STATUS = discord.Status.online
-ACTIVITY = "Watching The Orders"
+STATUS = discord.Status.idle
+ACTIVITY = "The Orders"
 ACTIVITY_TYPE = discord.ActivityType.watching
 LTC_ADDRESS = "LfWgXamAwJkWeHFowxXu5ZY5YRD5xPXMUA"
 BTC_ADDRESS = "No Bitcoin address has been set."
