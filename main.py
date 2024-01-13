@@ -9,14 +9,15 @@ from discord.ext.commands import has_guild_permissions
 from datetime import datetime, timedelta, timezone
 import asyncio
 import warnings
+import logging
 from keep_alive import keep_alive
 keep_alive()
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 STATUS = discord.Status.online
-ACTIVITY = "Watching The Orders"
-ACTIVITY_TYPE = discord.ActivityType.Watching
+ACTIVITY = "Playing with orders"
+ACTIVITY_TYPE = discord.ActivityType.playing
 LTC_ADDRESS = "LfWgXamAwJkWeHFowxXu5ZY5YRD5xPXMUA"
 BTC_ADDRESS = "No Bitcoin address has been set."
 PAYPAL = "No PayPal has been set."
@@ -257,4 +258,6 @@ async def get_command(ctx, service: str, *account_indices: str):
 
     await ctx.send(f"Accounts sent to {user.mention}. Selected accounts removed from stock.")
 
+logging.basicConfig(level=logging.INFO)
+print(BOT_TOKEN)
 bot.run(BOT_TOKEN)
