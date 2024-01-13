@@ -222,7 +222,7 @@ async def stock_command(ctx):
 @bot.command(name='get', help='Get account(s) from stock')
 async def get_command(ctx, service: str, *, indices: str):
     indices = [int(index.strip()) - 1 for index in indices.split(',')]
-    accounts_file_path = os.path.join(ACCOUNTS_DIR, f'{service.lower()}.txt')
+    accounts_file_path = os.path.join(BASE_DIR, f'{service.lower()}.txt')
 
     try:
         with open(accounts_file_path, 'r') as file:
